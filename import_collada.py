@@ -53,7 +53,8 @@ class ColladaImport :
     " to identify vendor-specific features they need to handle."
 
     def __init__(self, ctx, collada, filepath, **kwargs) :
-        self.DAE_NS = {"dae": collada.xmlnode.getroot().nsmap[None]}
+        root = collada.xmlnode.getroot()
+        # self.DAE_NS = {"dae": root.nsmap[None]}
         basename = os.path.basename(filepath)
         self._ctx = ctx
         self._collada = collada
@@ -705,7 +706,7 @@ class ColladaImport :
             rendering[effect.shadingtype]()
             b_mat.use_backface_culling = not effect.double_sided
             if isinstance(effect.emission, tuple) :
-                b_shader.inputs["Emission"].default_value = effect.emission
+                b_shader.inputs["Emission Color"].default_value = effect.emission
             # Map option NYI for now
             #end if
             self.rendering_transparency()
@@ -714,13 +715,13 @@ class ColladaImport :
         #end __init__
 
         def rendering_constant(self) :
-            self.color_or_texture(self.effect.diffuse, "diffuse", "Emission")
+            self.color_or_texture(self.effect.diffuse, "diffuse", "Emission Color")
         #end rendering_constant
 
         def rendering_lambert(self) :
             self.rendering_diffuse()
             inputs = self.b_shader.inputs
-            inputs["Specular"].default_value = 0
+            inputs["Specular IOR Level"].default_value = 0
             inputs["Metallic"].default_value = 0
             inputs["Roughness"].default_value = 1
         #end rendering_lambert
@@ -745,7 +746,7 @@ class ColladaImport :
             effect = self.effect
             b_shader = self.b_shader
             if isinstance(effect.specular, tuple) :
-                b_shader.inputs["Specular"].default_value = 1.0
+                b_shader.inputs["Specular IOR Level"].default_value = 1.0
                 b_shader.inputs["Base Color"].default_value = effect.specular
                   # might clash with diffuse colour, but hey
             # Map option NYI for now
@@ -761,7 +762,7 @@ class ColladaImport :
             effect = self.effect
             b_shader = self.b_shader
             if isinstance(effect.reflectivity, Real) and effect.reflectivity > 0 :
-                b_shader.inputs["Specular"].default_value = effect.reflectivity
+                b_shader.inputs["Specular IOR Level"].default_value = effect.reflectivity
                 if effect.reflective != None :
                     self.color_or_texture(effect.reflective, "reflective", "Base Color")
                       # might clash with diffuse colour, but hey
@@ -785,7 +786,7 @@ class ColladaImport :
                 #end if
                 if self.parent._ctx.scene.render.engine == "CYCLES" :
                     # This setting is ignored by Eevee
-                    b_shader.inputs["Transmission"].default_value = 1 - alpha
+                    b_shader.inputs["Transmission Weight"].default_value = 1 - alpha
                 else :
                     # This setting would affect Cycles as well,
                     # which is why I don’t do both.
@@ -803,7 +804,7 @@ class ColladaImport :
         #end rendering_transparency
 
         def rendering_emission(self) :
-            self.color_or_texture(self.effect.emission, "emission", "Emission")
+            self.color_or_texture(self.effect.emission, "emission", "Emission Color")
         #end rendering_emission
 
         def color_or_texture(self, color_or_texture, tex_name, shader_input_name, set_mat_color = False) :

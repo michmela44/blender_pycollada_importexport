@@ -1,7 +1,0 @@
-# to create release archive for «tag», use command
-#
-#     zip-dist -m MANIFEST.in pycollada_importexport «tag»
-#
-# where zip-dist comes from <https://github.com/ldo/git-useful>
-
-include *.py

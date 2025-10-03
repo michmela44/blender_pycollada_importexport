@@ -22,14 +22,14 @@
 bl_info = \
     {
         "name" : "COLLADA format",
-        "author" : "Tim Knip, Dusan Maliarik, Lawrence D’Oliveiro",
-        "version" : (0, 9, 0),
-        "blender" : (2, 83, 0),
+        "author" : "Tim Knip, Dusan Maliarik, Lawrence D’Oliveiro, Mike Melancon",
+        "version" : (0, 9, 1),
+        "blender" : (4, 5, 2),
         "location" : "File > Import, File > Export",
         "description" : "Import/Export COLLADA",
         "warning" : "",
-        "wiki_url" : "https://github.com/skrat/blender-pycollada/wiki",
-        "tracker_url" : "https://github.com/skrat/blender-pycollada/issues",
+        "wiki_url" : "https://github.com/michmela44/blender_pycollada_importexport/wiki",
+        "tracker_url" : "https://github.com/michmela44/blender_pycollada_importexport/issues",
         "category" : "Import-Export",
     }
 
